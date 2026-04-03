@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ice Cream Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffaf0;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #d6336c;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #d6336c;
+            color: white;
+            margin-top: 20px;
+        }
+        button, .btn {
+            padding: 6px 12px;
+            background-color: #d6336c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        button:hover, .btn:hover {
+            background-color: #b52b5a;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'about' %}">About Us</a>
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </div>
+    <div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'orders' %}">Orders</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    <!-- Page-specific content will go here -->
+    {% endblock %}
+</main>
+
+<footer>
+    &copy; 2026 Ice Cream Shop
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ice Cream Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffaf0;
+            margin: 0;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #d6336c;
+            margin-top: 20px;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 250px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 8px 12px;
+            background-color: #d6336c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .icecream-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .icecream-card {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 220px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .icecream-card:hover {
+            transform: scale(1.05);
+        }
+        .icecream-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .icecream-card h2 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+        .icecream-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+        .icecream-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 10px;
+            background-color: #d6336c;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 6px 10px;
+            background-color: #d6336c;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination span {
+            margin: 0 5px;
+            font-weight: bold;
+        }
+        .cart-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #d6336c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ice Cream Shop</h1>
+
+    <!-- Search -->
+    <form method="get" action="">
+        <input type="text" name="q" placeholder="Search ice cream...">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="icecream-grid">
+        {% for icecream in icecreams %}
+        <div class="icecream-card">
+            <img src="{{ icecream.image.url }}" alt="{{ icecream.name }}">
+            <h2>{{ icecream.name }}</h2>
+            <p>{{ icecream.description|truncatechars:50 }}</p>
+            <p>Price: ${{ icecream.price }}</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_to_cart' icecream.id %}">Add to Cart</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login to Add</a>
+            {% endif %}
+        </div>
+        {% empty %}
+            <p>No ice creams found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if icecreams.has_previous %}
+            <a href="?page={{ icecreams.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+        {% endif %}
+        <span>Page {{ icecreams.number }} of {{ icecreams.paginator.num_pages }}</span>
+        {% if icecreams.has_next %}
+            <a href="?page={{ icecreams.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+        {% endif %}
+    </div>
+
+    <a class="cart-link" href="{% url 'cart' %}">Go to Cart</a>
+</body>
+</html>
